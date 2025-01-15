@@ -15,6 +15,10 @@ http://localhost:8080
 helm show values apache-airflow/airflow > values.yaml
 echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
 helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml
+git remote add origin https://github.com/vinicius-dossantos/ks8-data-processing.git
+git add dags/
+git status
+git push
 
 -- comandos uteis
 kubectl get pods -n <namespace>
