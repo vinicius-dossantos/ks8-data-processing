@@ -1,0 +1,33 @@
+# Apache Airflow Core
+apache-airflow==2.9.3
+
+# Dependências Extras Individuais
+# Banco de Dados
+psycopg2-binary==2.9.8      # Para PostgreSQL
+
+# Suporte a Datetimes e Timezones
+pendulum==3.0.0
+
+# Serialização
+apache-airflow-providers-apache-spark==5.0.0    # Para Spark
+
+# Suporte a Arquivos e Dados
+
+boto3==1.28.74                             # Para manipulação de recursos na AWS
+pandas==2.1.1                              # Para processamento de dados
+pyarrow==13.0.0                            # Para integração com formatos Parquet e Arrow
+
+# Outros utilitários
+requests==2.31.0               # Para requisições HTTP
+jsonschema==4.18.5             # Para validação de JSON
+
+# Airflow CLI e Interface
+flask==2.2.5                   # Para suporte à interface web do Airflow
+gunicorn==20.1.0               # Para servidor web
+
+# Testes e Desenvolvimento
+pytest==7.4.2                  # Para execução de testes
+pytest-cov==4.1.0              # Para cobertura de testes
+
+# Ferramentas adicionais para Kubernetes
+kubernetes==26.1.0             # Para execução no Kubernetes

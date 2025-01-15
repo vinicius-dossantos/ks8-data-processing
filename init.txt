@@ -1,0 +1,21 @@
+-- terminal
+-- Kubernetes Clsuter
+kubectl proxy
+kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath="{.data.token}" | base64 --decode
+-- http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/cluster?namespace=default
+eyJhbGciOiJSUzI1NiIsImtpZCI6Ilo1aG9ib0tKd1N6aXRWX0ptQlRRQjIzRm1JeGRSaU9HMlM0LWZVRmpRNk0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJlYjU3Y2U3My1hMWIxLTRmY2QtOTc3ZS05N2QxZDYwN2E1NWEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.Q5HDfEEfV3wc3ybwF7VZu6G3xwYf4VJwARz3mmtDMhc9CtZAyAZyW2To0Z_VlFGv6dPszKkQlgXpaEFUL2SAhP0H0z3n5ipzCi7rUxhHvgjucVIJIoTmjqnBV3YmGRfPzEUzQvrYxAKrqPb8OM6FWjwSxE8L8dKy_VFQP3rfTGYEQkCA5y9iMqf_u_8T9Nf4sMl5jV5bLUFxRGgvuAUNGvPQEqw5YfLybpagwO2D5nZS19Cjx03uuuCGp_heco8TSQkm5wy2C0bwYIdzwwJjuVPB26hKa3iSjFFybxOVJncc-1ehqIGy82XTKIWFW_NDKOEPU1hfG_ms5neVntwAAQ
+
+--Instalando airflow
+
+helm repo add apache-airflow https://airflow.apache.org
+helm repo update
+helm install airflow apache-airflow/airflow --namespace airflow --create-namespace --debug
+kubectl port-forward svc/airflow-webserver 8080:8080 --namespace airflow
+http://localhost:8080
+helm show values apache-airflow/airflow > values.yaml
+echo Fernet Key: $(kubectl get secret --namespace airflow airflow-fernet-key -o jsonpath="{.data.fernet-key}" | base64 --decode)
+helm upgrade --install airflow apache-airflow/airflow --namespace airflow --create-namespace -f values.yaml
+
+-- comandos uteis
+kubectl get pods -n <namespace>
+kubectl exec -it <pod-name> -n <namespace> -- bash
