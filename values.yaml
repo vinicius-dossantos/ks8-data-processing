@@ -1,3 +1,13 @@
 fernetKey: REVjYnJtam5SdkxtYTlYWEpzdWxzYnJKckxBY212eEI=
 webserverSecretKey: REVjYnJtam5SdkxtYTlYWEpzdWxzYnJKckxBY212eEI=
 executor: "KubernetesExecutor"
+
+dags: 
+  gitSync:
+    enabled: true
+    repo: https://github.com/vinicius-dossantos/ks8-data-processing.git
+    branch: master
+    rev: HEAD
+    depth: 1
+    maxFailures: 0
+    subPath: "dags"

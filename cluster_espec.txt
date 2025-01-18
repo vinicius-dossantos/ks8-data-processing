@@ -1,0 +1,53 @@
+Cluster Kubernetes:
+
+	Control Plane (3x) - Ubuntu 24.04.1 LTS:
+		16g memória
+		16 cpu
+	Workers (6x) - Ubuntu 24.04.1 LTS:
+		8g memória
+		8 cpu
+
+Configuração e conectividade:
+	
+	1. Máquinas precisam estar se comunicando, todas com todas (púlica ou privada)
+	2. Devem possuir hostname, MAC address e product_uuid ÚNICOS e exclusivos
+	3. Portas liberadas (abertas)
+		a. Control Plane > TCP (inbound) 6443, 2379-2380, 10250, 10259, 10257
+		b. Workers > (inbound) 10250, 10256, 30000-32767
+	4. Desligar o swap de memória em todas as máquinas
+
+Instalações: 
+
+	1. Instalar e configurar o runtime CRI-O em todas as máquinas (workers e control plane)
+	2. Instalar kubeadm (workers e control plane) - v1.32
+	3. Instalar kublet (workers e control plane) - v1.32
+	4. Instalar kubectl (workers e control plane) - v1.32
+	5. Garantir que o cgroup do runtime e do kubelet estejam parametrizados com systemd (otimizado para Kubernetes com Ubuntu) em todas as máquinas
+
+Criando o cluster: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+	1. Upgrade working nodes:
+
+		# replace x in 1.32.x-* with the latest patch version
+		sudo apt-mark unhold kubeadm && \
+		sudo apt-get update && sudo apt-get install -y kubeadm='1.32.x-*' && \
+		sudo apt-mark hold kubeadm
+		sudo kubeadm upgrade node
+		# execute this command on a control plane node
+		# replace <node-to-drain> with the name of your node you are draining
+		kubectl drain <node-to-drain> --ignore-daemonsets
+		# replace x in 1.32.x-* with the latest patch version
+		sudo apt-mark unhold kubelet kubectl && \
+		sudo apt-get update && sudo apt-get install -y kubelet='1.32.x-*' kubectl='1.32.x-*' && \
+		sudo apt-mark hold kubelet kubectl
+		sudo systemctl daemon-reload
+		sudo systemctl restart kubelet
+		# execute this command on a control plane node
+		# replace <node-to-uncordon> with the name of your node
+		kubectl uncordon <node-to-uncordon>
+
+	2. Network set up:
+
+		ip route show # Look for a line starting with "default via"
+
+
